@@ -21,6 +21,7 @@
 #include <stddef.h>
 #include <string.h>
 #include "nimble/nimble_npl.h"
+#include "MIMXRT1064.h"
 
 static inline bool
 in_isr(void)
