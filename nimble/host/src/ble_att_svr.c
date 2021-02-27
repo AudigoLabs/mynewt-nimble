@@ -17,13 +17,14 @@
  * under the License.
  */
 
-#include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 #include "os/os.h"
 #include "nimble/ble.h"
 #include "host/ble_uuid.h"
 #include "ble_hs_priv.h"
+
+#include "FreeRTOS.h"
 
 /**
  * ATT server - Attribute Protocol
@@ -2668,7 +2669,7 @@ ble_att_svr_reset(void)
 static void
 ble_att_svr_free_start_mem(void)
 {
-    free(ble_att_svr_entry_mem);
+    vPortFree(ble_att_svr_entry_mem);
     ble_att_svr_entry_mem = NULL;
 }
 
@@ -2680,7 +2681,7 @@ ble_att_svr_start(void)
     ble_att_svr_free_start_mem();
 
     if (ble_hs_max_attrs > 0) {
-        ble_att_svr_entry_mem = malloc(
+        ble_att_svr_entry_mem = pvPortMalloc(
             OS_MEMPOOL_BYTES(ble_hs_max_attrs,
                              sizeof (struct ble_att_svr_entry)));
         if (ble_att_svr_entry_mem == NULL) {

@@ -21,6 +21,8 @@
 #include "os/os.h"
 #include "mem/mem.h"
 
+#include "FreeRTOS.h"
+
 /**
  * Generic mempool allocation function.  Used with basic and extended mempools.
  */
@@ -31,7 +33,7 @@ mem_malloc_mempool_gen(uint16_t num_blocks, uint32_t block_size,
     block_size = OS_ALIGN(block_size, OS_ALIGNMENT);
 
     if (num_blocks > 0) {
-        *out_buf = malloc(OS_MEMPOOL_BYTES(num_blocks, block_size));
+        *out_buf = pvPortMalloc(OS_MEMPOOL_BYTES(num_blocks, block_size));
         if (*out_buf == NULL) {
             return OS_ENOMEM;
         }
