@@ -5722,6 +5722,21 @@ ble_gap_repeat_pairing_event(const struct ble_gap_repeat_pairing *rp)
 #endif
 }
 
+int ble_gap_encrypt(const uint8_t* key, const uint8_t* data, uint8_t* result)
+{
+#if NIMBLE_BLE_SM
+    struct ble_hci_le_encrypt_cp cmd = {};
+    memcpy(cmd.key, key, sizeof(cmd.key));
+    memcpy(cmd.data, data, sizeof(cmd.data));
+    struct ble_hci_le_encrypt_rp resp;
+    int rc = ble_hs_hci_cmd_tx(BLE_HCI_OP(BLE_HCI_OGF_LE, BLE_HCI_OCF_LE_ENCRYPT), &cmd, sizeof(cmd), &resp, sizeof(resp));
+    memcpy(result, resp.data, sizeof(resp.data));
+    return rc;
+#else
+    return 0;
+#endif
+}
+
 /*****************************************************************************
  * $rssi                                                                     *
  *****************************************************************************/

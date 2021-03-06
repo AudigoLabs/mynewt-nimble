@@ -1820,6 +1820,18 @@ int ble_gap_update_params(uint16_t conn_handle,
 int ble_gap_security_initiate(uint16_t conn_handle);
 
 /**
+ * Encrypts the passed data.
+ *
+ * @param key                   The encryption key (16 bytes)
+ * @param data                  The data (16 bytes)
+ * @param result                The result buffer (16 bytes)
+ *
+ * @return                      0 on success;
+ *                              Other nonzero on error.
+ */
+int ble_gap_encrypt(const uint8_t* key, const uint8_t* data, uint8_t* result);
+
+/**
  * Initiates the GAP pairing procedure as a master. This is for testing only and
  * should not be used by application. Use ble_gap_security_initiate() instead.
  *
