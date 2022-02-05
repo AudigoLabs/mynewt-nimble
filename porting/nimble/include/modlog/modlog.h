@@ -20,9 +20,14 @@
 #ifndef H_MODLOG_
 #define H_MODLOG_
 
-#include <stdio.h>
+// #include <stdio.h>
 
 #include "log/log.h"
+#include "log_common/log_common.h"
+
+
+extern void debug_sdk_printf(const char* file, int line, const char* fmt_str, ...) __attribute__((format(printf, 3, 4)));
+#define printf(...) debug_sdk_printf(FILENAME, __LINE__, __VA_ARGS__)
 
 #define MODLOG_MODULE_DFLT 255
 
