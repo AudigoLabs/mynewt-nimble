@@ -630,6 +630,8 @@ ble_hci_uart_rx_evt(uint8_t data)
     if (ble_hci_uart_state.rx_cmd.cur == sizeof(struct ble_hci_ev)) {
         ble_hci_uart_state.rx_cmd.len = ble_hci_uart_state.rx_cmd.data[1] +
                                         sizeof(struct ble_hci_ev);
+        assert(ble_hci_uart_state.rx_cmd.len <=
+               MYNEWT_VAL(BLE_HCI_EVT_BUF_SIZE));
     }
 
     ble_hci_uart_rx_evt_cb();
@@ -644,6 +646,8 @@ ble_hci_uart_rx_le_evt(uint8_t data)
         /* LE Meta Event parameter length is never 0 */
         assert(data != 0);
         ble_hci_uart_state.rx_cmd.len = data + sizeof(struct ble_hci_ev);
+        assert(ble_hci_uart_state.rx_cmd.len <=
+               MYNEWT_VAL(BLE_HCI_EVT_BUF_SIZE));
         return;
     }
 
@@ -701,6 +705,7 @@ ble_hci_uart_rx_acl(uint8_t data)
         pktlen = ble_hci_uart_state.rx_acl.dptr[3];
         pktlen = (pktlen << 8) + ble_hci_uart_state.rx_acl.dptr[2];
         ble_hci_uart_state.rx_acl.len = pktlen + BLE_HCI_DATA_HDR_SZ;
+        assert(pktlen <= MYNEWT_VAL(BLE_ACL_BUF_SIZE));
 
         /*
          * Data portion cannot exceed data length of acl buffer. If it does
